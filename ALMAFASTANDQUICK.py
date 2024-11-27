@@ -1,41 +1,28 @@
+import os
 import json
 import pytesseract
-
+import pdfplumber
 from pdf2image import convert_from_path
 from PIL import Image
-import pytesseract
 
-# Percorso del file PDF
 pdf_path = "/Users/simonecarta/Desktop/code2024/Nutrizione_5a.pdf"
 
-# Converti il PDF in immagini (una per ogni pagina)
-images = convert_from_path(pdf_path)
 
-# Prendi la prima pagina come immagine (se hai più pagine, modifica questo)
-image = images[0]
+# Configura il percorso di Tesseract OCR (su macOS potrebbe non essere necessario)
+# pytesseract.pytesseract.tesseract_cmd = "/opt/homebrew/bin/tesseract"
+pytesseract.pytesseract.tesseract_cmd = r"/usr/local/bin/tesseract"  # Modifica il percorso se necessario
 
-# Esegui OCR sull'immagine per estrarre il testo
-text = pytesseract.image_to_string(image, lang="ita")
-print("Testo estratto:")
-print(text)
-
-
-text = pytesseract.image_to_string(image, lang="ita")
 
 # Percorsi delle cartelle di input e output
 input_folder_1 = "/Users/simonecarta/Desktop/input_folder_1"  # Prima cartella di input
 input_folder_2 = "/Users/simonecarta/Desktop/input_folder_2"  # Seconda cartella di input
 output_folder = "/Users/simonecarta/Desktop/output_folder"    # Cartella di output
 
-# Configurazione di Tesseract OCR
-# pytesseract.pytesseract.tesseract_cmd = r"C:/Program Files/Tesseract-OCR/tesseract.exe"  # Cambia percorso su Linux/Mac se necessario
-
-
 # Funzione per estrarre testo da immagini
 def extract_text_from_image(image_path):
     try:
         image = Image.open(image_path)
-        text = pytesseract.image_to_string(image)
+        text = pytesseract.image_to_string(image, lang="ita")
         return text.strip()
     except Exception as e:
         return f"Errore durante l'elaborazione dell'immagine: {e}"
@@ -44,9 +31,10 @@ def extract_text_from_image(image_path):
 def extract_text_from_pdf(pdf_path):
     text = ""
     try:
-        with pdfplumber.open(pdf_path) as pdf:
-            for page in pdf.pages:
-                text += page.extract_text() + "\n"
+        # Converte il PDF in immagini e poi esegue l'OCR su ogni immagine
+        images = convert_from_path(pdf_path)
+        for image in images:
+            text += pytesseract.image_to_string(image, lang="ita") + "\n"
         return text.strip()
     except Exception as e:
         return f"Errore durante l'elaborazione del PDF: {e}"
@@ -72,7 +60,7 @@ def process_folder(folder_path):
             extracted_data.append({"file": file, "content": text})
     return extracted_data
 
-# Elaborazione di entrambe le cartelle
+# Funzione principale
 def main():
     os.makedirs(output_folder, exist_ok=True)  # Crea la cartella di output se non esiste
     
