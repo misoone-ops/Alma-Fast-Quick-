@@ -11,7 +11,6 @@ Why AlmaFast&Quick?
 🌍 Italian language support for natural and intuitive communication.
 🚀 Simple and intuitive interface for quick and easy use.
 How It Works:
-Ask anything: From "How do I make the perfect lasagna?" to "Tips for baking bread".
 Get instant answers: The AI scans the database for the best advice and insights.
 Cook with confidence: Follow detailed steps and tips to create your masterpiece.
 With AlmaFast&Quick, you’ll never cook alone. Let your Virtual Sous-Chef AI inspire and assist you in creating exceptional dishes every day.
